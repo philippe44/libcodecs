@@ -17,8 +17,6 @@
 *.pch
 
 # Libraries
-*.lib
-*.a
 *.la
 *.lo
 
@@ -50,3 +48,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+build/
+.vs/
+*.bak
