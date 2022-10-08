@@ -33,6 +33,20 @@ do
 	done
 done
 
+# bootstrap environment if needed
+for item in ogg flac alac shine
+do
+	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
+		cd $item
+		if [[ -f autogen.sh ]]; then
+			./autogen.sh --no-symlinks
+		else 	
+			autoreconf -if
+		fi	
+		cd ..
+	fi
+done
+
 library=libcodecs.a
 
 # then iterate selected platforms/compilers
