@@ -20,7 +20,7 @@ do
 		continue
 	fi
 	
-	if [[ $# == 0 ]]; then
+	if [[ $# == 0 || ($# == 1 && -n $clean) ]]; then
 		compilers+=($cc)
 		continue
 	fi
@@ -54,10 +54,6 @@ for cc in ${compilers[@]}
 do
 	IFS=- read -r platform host dummy <<< $cc
 
-	#if [[ -f $target/$library && -z $clean ]]; then
-	#	continue
-	#fi
-	
 	export CPPFLAGS=${cppflags[$cc]}
 	export CC=${alias[$cc]:-$cc} 
 	export CXX=${CC/gcc/g++}
@@ -67,7 +63,7 @@ do
 	pwd=$(pwd)
 	
 	# build ogg
-	if [[ ! -f $target/libogg.a ]]; then
+	if [ ! -f $target/libogg.a ] || [[ -n $clean ]]; then
 		item=ogg
 		
 		cd $item
@@ -83,7 +79,7 @@ do
 		
 
 	# build alac
-	if [[ ! -f $target/libalac.a ]]; then
+	if [ ! -f $target/libalac.a ] || [[ -n $clean ]]; then
 		item=alac
 		
 		cd $item/codec
@@ -98,7 +94,7 @@ do
 	fi
 	
 	# build flac (use "autogen.sh --no-symlink")
-	if [[ ! -f $target/libFLAC-static.a ]]; then
+	if [ ! -f $target/libFLAC-static.a ] || [[ -n $clean ]]; then
 		item=flac
 		
 		cd $item
@@ -115,7 +111,7 @@ do
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
 	
-	if [[ ! -f $target/libshine.a ]]; then
+	if [ ! -f $target/libshine.a ] || [[ -n $clean ]]; then
 		item=shine
 		
 		cd $item
@@ -131,18 +127,6 @@ do
 	# finally concatenate all in a thin
 	rm -f $target/libcodecs.a
 	ar -rc --thin $target/libcodecs.a $target/*.a
-
-: '		
-	mkdir -p $target
-	mkdir -p $_/include
-	for item in upnp ixml
-	do
-		cp pupnp/$item/.libs/lib$item.a $target
-		ar -rc --thin $_/$library $_/lib$item.a 
-		cp -ur pupnp/$item/inc/* $target/include
-		find $_ -type f -not -name "*.h" -exec rm {} +
-	done	
-'
 done
 
 
