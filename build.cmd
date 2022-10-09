@@ -21,16 +21,15 @@ if not exist flac\build (
 	cd ..\..
 )	
 
-set config=Release
-
 if /I [%1] == [rebuild] (
-	msbuild libcodecs.sln /property:Configuration=%config% -t:rebuild
-) else (
-	msbuild libcodecs.sln /property:Configuration=%config%
+	set option="-t:Rebuild"
 )
 
+set config=Release
 set target=targets\win32\x86
 set include=targets\include
+
+msbuild libcodecs.sln /property:Configuration=%config% %option%
 
 if exist %target% (
 	del %target%\*.lib
