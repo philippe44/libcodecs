@@ -111,6 +111,7 @@ do
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
 	
+	# build shine
 	if [ ! -f $target/libshine.a ] || [[ -n $clean ]]; then
 		item=shine
 		
@@ -124,9 +125,19 @@ do
 		cp -u $item/src/lib/layer3.h $_
 	fi
 	
+	# then build shim (all others *must* be built first)
+	if [ ! -f $target/libshim.a ] || [[ -n $clean ]]; then
+		item=shim
+		
+		cd $item
+		make clean && make CC=${CC/gcc/g++}
+		cd $pwd
+		
+		cp $item/build/lib$item.a $target
+		cp -u $item/alac_wrapper.h targets/include/alac
+	fi
+	
 	# finally concatenate all in a thin
 	rm -f $target/libcodecs.a
 	ar -rc --thin $target/libcodecs.a $target/*.a
 done
-
-
