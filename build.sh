@@ -134,6 +134,6 @@ do
 	fi
 	
 	# finally concatenate all in a thin
-	rm -f $target/libcodecs.a
-	ar -rc --thin $target/libcodecs.a $target/*.a
+	rm -f $target/$library
+	ar -rc --thin $target/$library $target/*.a
 done
