@@ -125,7 +125,7 @@ do
 	item=addons
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
-		make clean && make CC=${CC/gcc/g++} PLATFORM=$platform
+		make clean && make PLATFORM=$platform
 		cd $pwd
 		
 		cp $item/build/lib$item.a $target
