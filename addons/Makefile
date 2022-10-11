@@ -5,7 +5,7 @@ endif
 PLATFORM ?= $(firstword $(subst -, ,$(CC)))
 HOST ?= $(word 2, $(subst -, ,$(CC)))
 
-LIB			= build/libshim.a
+LIB			= build/libaddons.a
 
 DEFINES  = -DNDEBUG -D_GNU_SOURCE
 CFLAGS  += -Wall -Wno-stringop-truncation -Wno-stringop-overflow -Wno-format-truncation -Wno-multichar -fPIC -ggdb -O2 $(DEFINES) -fdata-sections -ffunction-sections 

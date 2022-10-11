@@ -63,9 +63,8 @@ do
 	pwd=$(pwd)
 	
 	# build ogg
-	if [ ! -f $target/libogg.a ] || [[ -n $clean ]]; then
-		item=ogg
-		
+	item=ogg	
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --enable-static --disable-shared --host=$platform-$host 
 		make clean && make
@@ -79,9 +78,8 @@ do
 		
 
 	# build alac
-	if [ ! -f $target/libalac.a ] || [[ -n $clean ]]; then
-		item=alac
-		
+	item=alac
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item/codec
 		CC=${alias[$cc]:-$cc}
 		make clean OBJDIR="../../build/$item" 
@@ -94,9 +92,8 @@ do
 	fi
 	
 	# build flac (use "autogen.sh --no-symlink")
+	item=flac	
 	if [ ! -f $target/libFLAC-static.a ] || [[ -n $clean ]]; then
-		item=flac
-		
 		cd $item
 		./configure  --enable-debug=no --enable-static --disable-shared --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --disable-cpplibs --disable-oggtest --host=$platform-$host 
 		make clean && make
@@ -112,9 +109,8 @@ do
 	fi	
 	
 	# build shine
-	if [ ! -f $target/libshine.a ] || [[ -n $clean ]]; then
-		item=shine
-		
+	item=shine
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --host=$platform-$host
 		make clean && make
@@ -125,16 +121,16 @@ do
 		cp -u $item/src/lib/layer3.h $_
 	fi
 	
-	# then build shim (all others *must* be built first)
-	if [ ! -f $target/libshim.a ] || [[ -n $clean ]]; then
-		item=shim
-		
+	# then build addons (all others *must* be built first)
+	item=addons
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		make clean && make CC=${CC/gcc/g++}
 		cd $pwd
 		
 		cp $item/build/lib$item.a $target
-		cp -u $item/alac_wrapper.h targets/include/alac
+		mkdir -p targets/include/$item
+		cp -u $item/alac_wrapper.h $_
 	fi
 	
 	# finally concatenate all in a thin
