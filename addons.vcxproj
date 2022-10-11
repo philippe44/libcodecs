@@ -71,24 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectName)\</OutDir>
+    <OutDir>$(ProjectName)\build\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>build\lib$(ProjectName)</TargetName>
+    <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectName)\</OutDir>
+    <OutDir>$(ProjectName)\build\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>build\lib$(ProjectName)</TargetName>
+    <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectName)\</OutDir>
+    <OutDir>$(ProjectName)\build\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>build\lib$(ProjectName)</TargetName>
+    <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectName)\</OutDir>
+    <OutDir>$(ProjectName)\build\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>build\lib$(ProjectName)</TargetName>
+    <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
