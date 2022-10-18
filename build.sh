@@ -34,7 +34,7 @@ do
 done
 
 # bootstrap environment if needed
-for item in ogg flac alac shine
+for item in ogg flac alac shine mad 
 do
 	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
 		cd $item
@@ -80,7 +80,7 @@ do
 	item=soxr
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
-		rm -rf build && mkdir build && cd build
+		rm -rf build; mkdir -p build; cd build
 		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
 		make clean && make
 		cd $pwd
