@@ -46,6 +46,7 @@ robocopy addons\build %target% *.lib /NDL /NJH /NJS /nc /ns /np
 rem flac & ogg don't seem to really have per-platform different config files (thanks stdint)
 robocopy flac\include %include%\flac *.h /S /NDL /NJH /NJS /nc /ns /np /XD test*
 robocopy ogg\include %include%\ogg *.h /S /NDL /NJH /NJS /nc /ns /np
+robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np
 robocopy shine\src\lib %include%\shine layer3.h /NDL /NJH /NJS /nc /ns /np
 robocopy addons %include%\addons alac_wrapper.h /NDL /NJH /NJS /nc /ns /np

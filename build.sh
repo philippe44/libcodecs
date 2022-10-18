@@ -76,6 +76,18 @@ do
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
 		
+	# build mad
+	item=mad	
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		./configure --enable-static --disable-shared --host=$platform-$host 
+		make clean && make
+		cd $pwd
+		
+		cp $item/.libs/lib$item.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/mad.h $_
+	fi		
 
 	# build alac
 	item=alac
