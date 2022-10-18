@@ -67,7 +67,7 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --enable-static --disable-shared --host=$platform-$host 
-		make clean && make
+		make clean && make -j8
 		cd $pwd
 		
 		cp $item/src/.libs/lib$item.a $target
@@ -82,7 +82,7 @@ do
 		cd $item
 		rm -rf build; mkdir -p build; cd build
 		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DWITH_OPENMP=OFF
-		make clean && make
+		make clean && make -j8
 		cd $pwd
 		
 		cp $item/build/src/lib$item.a $target
@@ -95,7 +95,7 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --enable-static --disable-shared --host=$platform-$host 
-		make clean && make
+		make clean && make -j8
 		cd $pwd
 		
 		cp $item/.libs/lib$item.a $target
@@ -109,7 +109,7 @@ do
 		cd $item/codec
 		CC=${alias[$cc]:-$cc}
 		make clean OBJDIR="../../build/$item" 
-		make CC=${CC/gcc/g++} OBJDIR="../../build/$item" CFLAGS="-g -O3 -c ${cppflags[$cc]} -Wno-multichar -Wno-register"
+		make CC=${CC/gcc/g++} OBJDIR="../../build/$item" CFLAGS="-g -O3 -c ${cppflags[$cc]} -Wno-multichar -Wno-register" -j8
 		cd $pwd
 	
 		cp build/$item/lib$item.a $target
@@ -122,7 +122,7 @@ do
 	if [ ! -f $target/libFLAC-static.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure  --enable-debug=no --enable-static --disable-shared --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --disable-cpplibs --disable-oggtest --host=$platform-$host 
-		make clean && make
+		make clean && make -j8
 		cd $pwd
 		
 		cp $item/src/libFLAC/.libs/lib*-static.a $target
@@ -139,7 +139,7 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --host=$platform-$host
-		make clean && make
+		make clean && make -j8
 		cd $pwd
 		
 		cp $item/.libs/lib$item.a $target
@@ -151,7 +151,7 @@ do
 	item=addons
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
-		make clean && make PLATFORM=$platform
+		make clean && make PLATFORM=$platform -j8
 		cd $pwd
 		
 		cp $item/build/lib$item.a $target
