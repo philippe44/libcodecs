@@ -30,7 +30,7 @@ if not exist flac\build (
 if not exist soxr\build (
 	mkdir soxr\build
 	cd soxr\build
-	cmake .. -A Win32 -Wno-dev -DCMAKE_BUILD_TYPE="%config%"
+	cmake .. -A Win32 -Wno-dev -DCMAKE_BUILD_TYPE="%config%" -DBUILD_SHARED_LIBS=OFF
 	cd ..\..
 )	
 
