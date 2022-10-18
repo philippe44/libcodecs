@@ -75,6 +75,20 @@ do
 		cp -ur $item/include/* $_
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
+	
+	# build soxr
+	item=soxr
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		rm -rf build && mkdir build && cd build
+		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
+		make clean && make
+		cd $pwd
+		
+		cp $item/build/src/lib$item.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/src/soxr.h $_
+	fi	
 		
 	# build mad
 	item=mad	

@@ -10,9 +10,6 @@
 [submodule "shine"]
 	path = shine
 	url = https://github.com/philippe44/shine
-[submodule "mad"]
-	path = mad
-	url = https://github.com/philippe44/mad
 [submodule "soxr"]
 	path = soxr
 	url = https://github.com/philippe44/soxr
