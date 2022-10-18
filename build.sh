@@ -81,7 +81,7 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		rm -rf build; mkdir -p build; cd build
-		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF
+		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DWITH_OPENMP=OFF
 		make clean && make
 		cd $pwd
 		
