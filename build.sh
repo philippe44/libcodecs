@@ -34,9 +34,10 @@ do
 done
 
 # bootstrap environment if needed
-for item in ogg flac alac shine mad 
+for item in ogg flac alac shine mad opus opusfile faad2
 do
 	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
+		echo "rebuilding ./configure for $item (if this fails, check ./autogen.sh and symlink usage)"
 		cd $item
 		if [[ -f autogen.sh ]]; then
 			./autogen.sh --no-symlinks
@@ -119,24 +120,21 @@ do
 		cp -ur $item/include/* $_
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
-	
-	
-#./configure --disable-http --disable-examples --disable-doc --disable-shared
-	
-	# build soxr
-	item=soxr
-	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+
+	# build faad2 (non-standard)
+	item=faad2
+	if [ ! -f $target/libfaad.a ] || [[ -n $clean ]]; then
 		cd $item
-		rm -rf build; mkdir -p build; cd build
-		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DWITH_OPENMP=OFF
+		./configure --enable-static --disable-shared --host=$platform-$host 
 		make clean && make -j8
 		cd $pwd
 		
-		cp $item/build/src/lib$item.a $target
+		cp $item/libfaad/.libs/lib*.a $target
 		mkdir -p targets/include/$item
-		cp -ur $item/src/soxr.h $_
+		cp -ur $item/include/* $_
+		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
-		
+
 	# build mad
 	item=mad	
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
@@ -181,6 +179,20 @@ do
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
 	
+	# build soxr
+	item=soxr
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		rm -rf build; mkdir -p build; cd build
+		cmake .. -Wno-dev -DCMAKE_BUILD_TYPE="release" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DWITH_OPENMP=OFF
+		make clean && make -j8
+		cd $pwd
+		
+		cp $item/build/src/lib$item.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/src/soxr.h $_
+	fi	
+		
 	# build shine
 	item=shine
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
