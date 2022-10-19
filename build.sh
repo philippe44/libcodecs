@@ -75,6 +75,21 @@ do
 		cp -ur $item/include/* $_
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
+
+	# build vorbis
+	item=vorbis
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		./configure --enable-static --disable-shared --disable-oggtest --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --host=$platform-$host 
+		make clean && make -j8
+		cd $pwd
+		
+		cp $item/lib/.libs/lib*.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/include/* $_
+		find $_ -type f -not -name "*.h" -exec rm {} +
+	fi	
+	
 	
 	# build soxr
 	item=soxr
