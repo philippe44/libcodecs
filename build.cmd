@@ -13,6 +13,7 @@ if /I [%1] == [rebuild] (
 	rd /q /s ogg\%build%
 	rd /q /s soxr\%build%
 	rd /q /s vorbis\%build%
+	rd /q /s opus\%build%
 )
 
 if not exist ogg\%build% (
@@ -43,6 +44,13 @@ if not exist vorbis\%build% (
 	cd ..\..
 )	
 
+if not exist opus\%build% (
+	mkdir opus\%build%
+	cd opus\%build%
+	cmake .. -A Win32
+	cd ..\..
+)	
+
 msbuild libcodecs.sln /property:Configuration=%config% %option%
 
 if exist %target% (
@@ -58,6 +66,7 @@ robocopy flac\%build%\src\libFLAC\%config% %target% *.lib *.pdb /NDL /NJH /NJS /
 robocopy flac\%build%\src\share\utf8\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy ogg\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy vorbis\%build%\lib\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
+robocopy opus\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\%build%\src\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy addons\build %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 
@@ -65,6 +74,7 @@ rem flac & ogg don't seem to really have per-platform different config files (th
 robocopy flac\include %include%\flac *.h /S /NDL /NJH /NJS /nc /ns /np /XD test*
 robocopy ogg\include %include%\ogg *.h /S /NDL /NJH /NJS /nc /ns /np
 robocopy vorbis\include %include%\vorbis *.h /S /NDL /NJH /NJS /nc /ns /np
+robocopy opus\include %include%\opus *.h /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\src %include%\soxr soxr.h /NDL /NJH /NJS /nc /ns /np
 robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np

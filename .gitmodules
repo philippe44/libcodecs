@@ -19,3 +19,6 @@
 [submodule "vorbis"]
 	path = vorbis
 	url = https://github.com/xiph/vorbis
+[submodule "opus"]
+	path = opus
+	url = https://github.com/xiph/opus
