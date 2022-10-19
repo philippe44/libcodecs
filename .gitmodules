@@ -25,3 +25,6 @@
 [submodule "opusfile"]
 	path = opusfile
 	url = https://github.com/xiph/opusfile
+[submodule "faad2"]
+	path = faad2
+	url = https://github.com/philippe44/faad2

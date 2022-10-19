@@ -51,6 +51,8 @@ if not exist opus\%build% (
 	cd ..\..
 )	
 
+REM opusfile should be build using cmake asw ell but it's package dependencies prevent it
+
 msbuild libcodecs.sln /property:Configuration=%config% %option%
 
 if exist %target% (
@@ -67,6 +69,7 @@ robocopy flac\%build%\src\share\utf8\%config% %target% *.lib *.pdb /NDL /NJH /NJ
 robocopy ogg\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy vorbis\%build%\lib\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy opus\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
+robocopy faad2\libfaad\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\%build%\src\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy addons\build %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 
@@ -76,6 +79,7 @@ robocopy ogg\include %include%\ogg *.h /S /NDL /NJH /NJS /nc /ns /np
 robocopy vorbis\include %include%\vorbis *.h /S /NDL /NJH /NJS /nc /ns /np
 robocopy opus\include %include%\opus *.h /NDL /NJH /NJS /nc /ns /np
 robocopy opusfile\include %include%\opusfile *.h /NDL /NJH /NJS /nc /ns /np
+robocopy faad2\include %include%\faad2 *.h /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\src %include%\soxr soxr.h /NDL /NJH /NJS /nc /ns /np
 robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np
