@@ -22,3 +22,6 @@
 [submodule "opus"]
 	path = opus
 	url = https://github.com/xiph/opus
+[submodule "opusfile"]
+	path = opusfile
+	url = https://github.com/xiph/opusfile

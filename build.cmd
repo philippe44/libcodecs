@@ -47,7 +47,7 @@ if not exist vorbis\%build% (
 if not exist opus\%build% (
 	mkdir opus\%build%
 	cd opus\%build%
-	cmake .. -A Win32
+	cmake .. -A Win32 -DOP_DISABLE_EXAMPLES=ON -DOP_DISABLE_DOCS=ON -DOP_DISABLE_HTTP=ON
 	cd ..\..
 )	
 
@@ -57,11 +57,11 @@ if exist %target% (
 	del %target%\*.lib
 )
 
-REM this takes care of alac, mad, shine
+REM this takes care of alac, mad, shine and opusfile
 robocopy lib\x86 %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy .libs %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 
-REM this takes care of flac, pgg, soxr
+REM this takes care of flac, ogg, soxr and vorbis
 robocopy flac\%build%\src\libFLAC\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy flac\%build%\src\share\utf8\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy ogg\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
@@ -75,6 +75,7 @@ robocopy flac\include %include%\flac *.h /S /NDL /NJH /NJS /nc /ns /np /XD test*
 robocopy ogg\include %include%\ogg *.h /S /NDL /NJH /NJS /nc /ns /np
 robocopy vorbis\include %include%\vorbis *.h /S /NDL /NJH /NJS /nc /ns /np
 robocopy opus\include %include%\opus *.h /NDL /NJH /NJS /nc /ns /np
+robocopy opusfile\include %include%\opusfile *.h /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\src %include%\soxr soxr.h /NDL /NJH /NJS /nc /ns /np
 robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np
