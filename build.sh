@@ -90,6 +90,38 @@ do
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
 	
+	# build opus
+	item=opus
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		./configure --enable-static --disable-shared --disable-extra-programs --disable-doc --host=$platform-$host 
+		make clean && make -j8
+		cd $pwd
+		
+		cp $item/.libs/lib*.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/include/* $_
+		find $_ -type f -not -name "*.h" -exec rm {} +
+	fi	
+
+	# build opusfile
+	item=opusfile
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		export DEPS_CFLAGS="-I../ogg/include -I../opus/include"
+		./configure --enable-static --disable-shared --disable-http --disable-examples --disable-doc --host=$platform-$host 
+		make clean && make -j8
+		unset DEPS_FLAGS
+		cd $pwd
+		
+		cp $item/.libs/lib*.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/include/* $_
+		find $_ -type f -not -name "*.h" -exec rm {} +
+	fi	
+	
+	
+#./configure --disable-http --disable-examples --disable-doc --disable-shared
 	
 	# build soxr
 	item=soxr
