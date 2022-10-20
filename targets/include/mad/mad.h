@@ -24,7 +24,7 @@
 extern "C" {
 # endif
 
-# define FPM_MIPS
+# define FPM_PPC
 
 
 
@@ -347,16 +347,24 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 /*
  * This MIPS version is fast and accurate; the disposition of the least
  * significant bit depends on OPT_ACCURACY via mad_f_scale64().
+ * NOTE: new compiler does not allow h and l constraints, so this is less
+ * optimized
  */
 #  define MAD_F_MLX(hi, lo, x, y)  \
-    asm ("mult	%2,%3"  \
-	 : "=l" (lo), "=h" (hi)  \
+	asm ("mult	%2,%3 \n\t" \
+		 "mflo	%1 \n\t" \
+		 "mfhi	%0 \n\t" \
+	 : "=r" (hi), "=r" (lo)  \
 	 : "%r" (x), "r" (y))
-
+	 
 # if defined(HAVE_MADD_ASM)
 #  define MAD_F_MLA(hi, lo, x, y)  \
-    asm ("madd	%2,%3"  \
-	 : "+l" (lo), "+h" (hi)  \
+    asm ("mthi	%0 \n\t" \
+		 "mtlo	%1 \n\t" \
+		 "madd	%2,%3 \n\t"  \
+		 "mflo	%1 \n\t" \
+		 "mfhi	%0 \n\t" \
+	 : "+r" (lo), "+r" (hi)  \
 	 : "%r" (x), "r" (y))
 # elif defined(HAVE_MADD16_ASM)
 /*
@@ -364,13 +372,18 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
  * multiply/accumulate instruction.
  */
 #  define MAD_F_ML0(hi, lo, x, y)  \
-    asm ("mult	%2,%3"  \
-	 : "=l" (lo), "=h" (hi)  \
+    asm ("mult	%2,%3 \n\t" \
+		 "mflo	%1 \n\t" \
+		 "mfhi	%0 \n\t" \
+	 : "=r" (lo), "=r" (hi)  \
 	 : "%r" ((x) >> 12), "r" ((y) >> 16))
 #  define MAD_F_MLA(hi, lo, x, y)  \
-    asm ("madd16	%2,%3"  \
-	 : "+l" (lo), "+h" (hi)  \
+    asm ("madd16 %2,%3"  \
+		 "mflo %1 \n\t" \
+		 "mfhi %0 \n\t" \
+	 : "+r" (lo), "+r" (hi)  \
 	 : "%r" ((x) >> 12), "r" ((y) >> 16))
+#  define MAD_F_MLZ(hi, lo)  ((mad_fixed_t) (lo))
 #  define MAD_F_MLZ(hi, lo)  ((mad_fixed_t) (lo))
 # endif
 
