@@ -34,7 +34,7 @@ do
 done
 
 # bootstrap environment if needed
-for item in ogg flac alac shine mad opus opusfile faad2
+for item in ogg flac alac shine mad vorbis opus opusfile faad2
 do
 	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
 		echo "rebuilding ./configure for $item (if this fails, check ./autogen.sh and symlink usage)"
@@ -110,9 +110,11 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		export DEPS_CFLAGS="-I../ogg/include -I../opus/include"
+		export DEPS_LIBS=-s
 		./configure --enable-static --disable-shared --disable-http --disable-examples --disable-doc --host=$platform-$host 
 		make clean && make -j8
 		unset DEPS_FLAGS
+		unset DEPS_LIBS
 		cd $pwd
 		
 		cp $item/.libs/lib*.a $target
