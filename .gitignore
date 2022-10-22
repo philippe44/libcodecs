@@ -54,3 +54,4 @@ Debug/
 lib/
 .libs/
 *.user
+*.tmp
