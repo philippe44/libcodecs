@@ -169,8 +169,7 @@ do
 	item=flac	
 	if [ ! -f $target/libFLAC-static.a ] || [[ -n $clean ]]; then
 		cd $item
-		# solaris does not have the stack protection primitives
-		./configure --disable-stack-smash-protection --enable-debug=no --enable-static --disable-shared --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --disable-cpplibs --disable-oggtest --host=$platform-$host 
+		./configure --enable-debug=no --enable-static --disable-shared --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --disable-cpplibs --disable-oggtest --host=$platform-$host 
 		make clean && make -j8
 		cd $pwd
 		
