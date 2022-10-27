@@ -55,7 +55,7 @@ for cc in ${compilers[@]}
 do
 	IFS=- read -r platform host dummy <<< $cc
 
-	export CPPFLAGS=${cppflags[$cc]}
+	export CPPFLAGS="${cppflags[$cc]} -fabi-version=8"
 	export CC=${alias[$cc]:-$cc} 
 	export CXX=${CC/gcc/g++}
 	export AR=${CC%-*}-ar
