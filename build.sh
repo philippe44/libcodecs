@@ -55,7 +55,7 @@ for cc in ${compilers[@]}
 do
 	IFS=- read -r platform host dummy <<< $cc
 
-	export CPPFLAGS="${cppflags[$cc]} -fabi-version=8"
+	export CPPFLAGS="${cppflags[$cc]} -fabi-version=6"
 	export CC=${alias[$cc]:-$cc} 
 	export CXX=${CC/gcc/g++}
 	export AR=${CC%-*}-ar
@@ -157,7 +157,7 @@ do
 	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item/codec
 		make clean OBJDIR="../../build/$item" 
-		make AR=$AR CC=${CC/gcc/g++} OBJDIR="../../build/$item" CFLAGS="-g -O3 -c ${cppflags[$cc]} -Wno-multichar -Wno-register" -j8
+		make AR=$AR CC=${CC/gcc/g++} OBJDIR="../../build/$item" CFLAGS="-g -O3 -c $CPPFLAGS -Wno-multichar -Wno-register" -j8
 		cd $pwd
 	
 		cp build/$item/lib$item.a $target
