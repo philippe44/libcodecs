@@ -15,9 +15,12 @@ declare -A alias=( [x86-linux-gnu-gcc]=i686-stretch-linux-gnu-gcc \
 				   [x86_64-freebsd-gnu-gcc]=x86_64-cross-freebsd12.3-gcc \
 				   [x86_64-solaris-gnu-gcc]=x86_64-cross-solaris2.x-gcc )
 
+# There is a bug in this arm compiler for flac when O3 is selected so for now 
+# everybody stays with O2
 declare -A cflags=( [sparc64-linux-gnu-gcc]="-mcpu=v7" \
                     [mips-linux-gnu-gcc]="-march=mips32" \
-                    [powerpc-linux-gnu-gcc]="-m32" )
+                    [powerpc-linux-gnu-gcc]="-m32" \ 
+                    [arm-linux-gnueabi-gcc]="-O2" )
 					
 declare -a compilers
 
