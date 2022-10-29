@@ -5,7 +5,7 @@ list="x86_64-linux-gnu-gcc x86-linux-gnu-gcc arm-linux-gnueabi-gcc aarch64-linux
 	  x86_64-freebsd-gnu-gcc x86_64-solaris-gnu-gcc"
 
 declare -A alias=( [x86-linux-gnu-gcc]=i686-stretch-linux-gnu-gcc \
-				   [x86_64-linux-gnu-gcc]=x86_64-stretch-linux-gnu-gcc \
+   [x86_64-linux-gnu-gcc]=x86_64-stretch-linux-gnu-gcc \
 				   [arm-linux-gnueabi-gcc]=armv7-stretch-linux-gnueabi-gcc \
 				   [aarch64-linux-gnu-gcc]=aarch64-stretch-linux-gnu-gcc \
 				   [sparc64-linux-gnu-gcc]=sparc64-stretch-linux-gnu-gcc \
@@ -21,7 +21,8 @@ declare -A alias=( [x86-linux-gnu-gcc]=i686-stretch-linux-gnu-gcc \
 declare -A cflags=( [sparc64-linux-gnu-gcc]="-mcpu=v7" \
                     [mips-linux-gnu-gcc]="-march=mips32" \
                     [powerpc-linux-gnu-gcc]="-m32" \ 
-                    [arm-linux-gnueabi-gcc]="-O2" )
+                    [arm-linux-gnueabi-gcc]="-O2" \
+                    [x86_64-solaris-gnu-gcc]=-mno-direct-extern-access )
 					
 declare -a compilers
 
