@@ -4,9 +4,6 @@
 [submodule "alac"]
 	path = alac
 	url = https://github.com/philippe44/alac
-[submodule "flac"]
-	path = flac
-	url = https://github.com/philippe44/flac
 [submodule "shine"]
 	path = shine
 	url = https://github.com/philippe44/shine
