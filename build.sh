@@ -210,8 +210,8 @@ do
 		make clean && make -j8
 		cd $pwd
 		
-		cp $item/src/libFLAC/.libs/lib*-static.a $target
-		cp $item/src/share/utf8/.libs/lib*.a $_
+		cp $item/src/libFLAC/.libs/libFLAC-static.a $target/libflac.a
+		cp $item/src/share/utf8/.libs/lib*.a $target
 		mkdir -p targets/include/$item
 		cp -ur $item/include/FLAC $_
 		cp -ur $item/include/FLAC++ $_
