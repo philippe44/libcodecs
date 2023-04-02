@@ -51,7 +51,7 @@ if not exist opus\%build% (
 	cd ..\..
 )	
 
-REM opusfile should be build using cmake asw ell but it's package dependencies prevent it
+REM opusfile should be build using cmake as well but it's package dependencies prevent it
 
 msbuild libcodecs.sln /property:Configuration=%config% %option%
 

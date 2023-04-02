@@ -24,13 +24,13 @@
 extern "C" {
 # endif
 
-# define FPM_ARM
+# define FPM_DEFAULT
 
 
 
-# define SIZEOF_INT 4
-# define SIZEOF_LONG 4
-# define SIZEOF_LONG_LONG 8
+# define SIZEOF_INT 0
+# define SIZEOF_LONG 0
+# define SIZEOF_LONG_LONG 0
 
 
 /* Id: version.h,v 1.26 2004/01/23 09:41:33 rob Exp */
