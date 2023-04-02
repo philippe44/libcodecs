@@ -24,9 +24,10 @@ declare -A alias=( [x86-linux-gnu-gcc]=i686-stretch-linux-gnu-gcc \
 # TODO : add entries like [arm-linux-gnueabi-gcc#flac] to make fixes item-specific
 declare -A cflags=( [sparc64-linux-gnu-gcc]="-mcpu=v7" \
                     [mips-linux-gnu-gcc]="-march=mips32" \
+                    [x86_64-linux-gnu-gcc]="-fno-fast-math" \
                     [powerpc-linux-gnu-gcc]="-m32" \
                     [arm-linux-gnueabi-gcc]="-O2" \
-	   	            [armv5-linux-gnueabi-gcc]="-march=armv5t -mfloat-abi=soft" )
+   	            [armv5-linux-gnueabi-gcc]="-march=armv5t -mfloat-abi=soft" )
 					
 declare -a compilers
 
