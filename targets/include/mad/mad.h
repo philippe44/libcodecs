@@ -24,7 +24,7 @@
 extern "C" {
 # endif
 
-# define FPM_ARM
+# define FPM_MIPS
 
 
 
