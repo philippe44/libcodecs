@@ -88,7 +88,7 @@ for cc in ${compilers[@]}
 do
 	IFS=- read -r platform host dummy <<< $cc
 
-	export CFLAGS=${cflags[$cc]}
+	export CFLAGS="${cflags[$cc]} -fno-finite-math-only"
 	export CC=${alias[$cc]:-$cc}
 	export AR=${CC%-*}-ar
 	export RANLIB=${CC%-*}-ranlib
