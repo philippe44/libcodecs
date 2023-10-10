@@ -94,7 +94,7 @@ do
 	export RANLIB=${CC%-*}-ranlib
 	if [[ $CC =~ -gcc ]]; then
 		export CXX=${CC%-*}-g++
-		CFLAGS+=" -fno-finite-math-only"
+		CFLAGS+=" -fno-finite-math-only -fPIC"
 	else
 		export CXX=${CC%-*}-c++
 		CFLAGS+=" -fno-temp-file -stdlib=libc++"
