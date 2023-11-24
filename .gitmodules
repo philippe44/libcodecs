@@ -28,3 +28,6 @@
 [submodule "flac"]
 	path = flac
 	url = https://github.com/xiph/flac
+[submodule "opusenc"]
+	path = opusenc
+	url = https://github.com/xiph/libopusenc

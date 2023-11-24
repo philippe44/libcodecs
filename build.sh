@@ -65,13 +65,16 @@ for cc in ${candidates[@]}; do
 done
 
 # bootstrap environment if needed
-for item in ogg flac alac shine mad vorbis opus opusfile faad2
+for item in ogg flac alac shine mad vorbis opus opusenc opusfile faad2
 do
 	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
 		echo "rebuilding ./configure for $item (if this fails, check ./autogen.sh and symlink usage)"
 		cd $item
 		if [[ -f autogen.sh ]]; then
 			./autogen.sh --no-symlinks
+			if [ $? ]; then
+				autoreconf -if
+			fi
 		else 	
 			autoreconf -if
 		fi	
@@ -164,6 +167,24 @@ do
 		cp -ur $item/include/* $_
 		find $_ -type f -not -name "*.h" -exec rm {} +
 	fi	
+	
+	# build opusenc
+	item=opusenc
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		export DEPS_CFLAGS="-I../ogg/include -I../opus/include"
+		export DEPS_LIBS=-s
+		./configure --enable-static --disable-shared --disable-examples --disable-doc --host=$CONFIG
+		make clean && make -j8
+		unset DEPS_FLAGS
+		unset DEPS_LIBS
+		cd $pwd
+		
+		 cp $item/.libs/lib*.a $target
+		 mkdir -p targets/include/$item
+		 cp -ur $item/include/* $_
+		 find $_ -type f -not -name "*.h" -exec rm {} +
+	fi	
 
 	# build faad2 (non-standard)
 	item=faad2
@@ -207,7 +228,7 @@ do
 	
 	# build flac (use "autogen.sh --no-symlink")
 	item=flac	
-	if [ ! -f $target/libFLAC-static.a ] || [[ -n $clean ]]; then
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
 		cd $item
 		./configure --enable-debug=no --enable-static --disable-shared --with-ogg-includes=$pwd/targets/include/ogg --with-ogg-libraries=$pwd/$target --disable-cpplibs --disable-oggtest --host=$CONFIG
 		make clean && make -j8
