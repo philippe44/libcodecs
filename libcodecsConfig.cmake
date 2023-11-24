@@ -5,7 +5,7 @@ set(_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/targets)
 set(_CONFIG_GROUP codecs)
 
 # set the items here, there might be none (just a group)
-set(_CONFIG_ITEMS addons alac faad flac mad ogg opus opusfile opusurl shine soxr utf8 vorbis vorbisenc vorbisfile)
+set(_CONFIG_ITEMS addons alac faad flac mad ogg opus opusfile opusenc opusurl shine soxr utf8 vorbis vorbisenc vorbisfile)
 
 # includes have one of the following structure (there might be no item)
 # -- include/<item>/*.h
