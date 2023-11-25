@@ -65,7 +65,7 @@ for cc in ${candidates[@]}; do
 done
 
 # bootstrap environment if needed
-for item in ogg flac alac shine mad vorbis opus opusenc opusfile faad2
+for item in ogg flac alac shine mad vorbis opus opusenc opusfile faad2i faac
 do
 	if [[ ! -f $item/configure && -f $item/configure.ac ]]; then
 		echo "rebuilding ./configure for $item (if this fails, check ./autogen.sh and symlink usage)"
@@ -75,6 +75,8 @@ do
 			if [ $? ]; then
 				autoreconf -if
 			fi
+		elif [[ -f bootstrap ]]; then
+			./bootstrap
 		else 	
 			autoreconf -if
 		fi	
@@ -195,6 +197,20 @@ do
 		cd $pwd
 		
 		cp $item/libfaad/.libs/lib*.a $target
+		mkdir -p targets/include/$item
+		cp -ur $item/include/* $_
+		find $_ -type f -not -name "*.h" -exec rm {} +
+	fi	
+	
+	# build faac
+	item=faac
+	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+		cd $item
+		./configure --enable-static --disable-shared --host=$CONFIG
+		make clean && make -j8
+		cd $pwd
+		
+		cp $item/libfaac/.libs/lib*.a $target
 		mkdir -p targets/include/$item
 		cp -ur $item/include/* $_
 		find $_ -type f -not -name "*.h" -exec rm {} +

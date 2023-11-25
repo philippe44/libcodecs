@@ -74,7 +74,7 @@ if exist %target% (
 REM this takes care of alac, mad, shine, opusenc
 robocopy .libs %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 
-REM this takes care of flac, ogg, soxr, vorbis, opus, opusfile
+REM this takes care of faad2, faac, flac, ogg, soxr, vorbis, opus, opusfile
 robocopy flac\%build%\src\libFLAC\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy flac\%build%\src\share\utf8\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy ogg\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
@@ -82,6 +82,7 @@ robocopy vorbis\%build%\lib\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns
 robocopy opus\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy opusfile\build\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy faad2\libfaad\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
+robocopy faac\libfaac\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\%build%\src\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 robocopy addons\build %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
 
@@ -93,6 +94,7 @@ robocopy opus\include %include%\opus *.h /NDL /NJH /NJS /nc /ns /np
 robocopy opusfile\include %include%\opusfile *.h /NDL /NJH /NJS /nc /ns /np
 robocopy opusenc\include %include%\opusenc *.h /NDL /NJH /NJS /nc /ns /np
 robocopy faad2\include %include%\faad2 *.h /NDL /NJH /NJS /nc /ns /np
+robocopy faac\include %include%\faac *.h /NDL /NJH /NJS /nc /ns /np
 robocopy soxr\src %include%\soxr soxr.h /NDL /NJH /NJS /nc /ns /np
 robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np
