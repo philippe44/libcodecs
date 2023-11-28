@@ -16,11 +16,14 @@ LIB			= build/libaddons.a
 DEFINES  = -DNDEBUG -D_GNU_SOURCE
 CFLAGS  += -Wall -Wno-multichar -fPIC -ggdb -O2 $(DEFINES) -fdata-sections -ffunction-sections 
 
-CODECS		= ../targets
+CODECS		= ..
 
-INCLUDE = -I$(CODECS)/include/alac
+INCLUDE = -I$(CODECS)/alac/codec \
+	  -I$(CODECS)/faac/include \
+	  -I$(CODECS)/flac/include \
+	  -I$(CODECS)/shine/src/lib
 		  
-SOURCES = alac_wrapper.cpp
+SOURCES = alac_wrapper.cpp encoder.c
 
 OBJECTS = $(patsubst %.c,build/%.o,$(filter %.c,$(SOURCES)))
 OBJECTS += $(patsubst %.cpp,build/%.o,$(filter %.cpp,$(SOURCES)))
