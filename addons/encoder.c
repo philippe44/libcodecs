@@ -281,7 +281,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, size_t max_f
 		encoder->mimetype = strdup("audio/wav");
 		encoder->open = wav_open;
 		encoder->encode = wav_encode;
-	} else if (strncasecmp(codec, "mp3",3)) {
+	} else if (!strncasecmp(codec, "mp3",3)) {
 		encoder->format = CODEC_MP3;
 		encoder->mimetype = strdup("audio/mpeg");
 		encoder->open = mp3_open;
@@ -289,7 +289,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, size_t max_f
 		encoder->encode = mp3_encode;
 		encoder->mp3.bitrate = 192;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->mp3.bitrate) && encoder->mp3.bitrate > 320) encoder->mp3.bitrate = 320;
-	} else if (strncasecmp(codec, "aac",3)) {
+	} else if (!strncasecmp(codec, "aac",3)) {
 		encoder->format = CODEC_AAC;
 		encoder->mimetype = strdup("audio/aac");
 		encoder->open = aac_open;
