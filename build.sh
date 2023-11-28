@@ -288,14 +288,20 @@ do
 	
 	# then build addons (all others *must* be built first)
 	item=addons
-	if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+	#if [ ! -f $target/lib$item.a ] || [[ -n $clean ]]; then
+	if [ 1 ]; then
 		cd $item
-		make clean && make PLATFORM=$platform HOST=$host -j8
+		if [[ -n $clean ]]; then
+			make clean 
+		fi
+		make PLATFORM=$platform HOST=$host -j8
 		cd $pwd
 		
-		cp $item/build/lib$item.a $target
-		mkdir -p targets/include/$item
-		cp -u $item/alac_wrapper.h $_
+		if [ $item/build/$platform/$host/lib$item.a -nt $target/lib$item.a ]; then
+			cp $item/build/$platform/$host/lib$item.a $target
+			mkdir -p targets/include/$item
+			cp -u $item/alac_wrapper.h $_
+		fi
 	fi
 	
 	# finally concatenate all in a thin (if possible)

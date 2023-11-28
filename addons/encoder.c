@@ -37,7 +37,7 @@ struct encoder_s {
 	uint8_t* data;
 	size_t count, bytes;
 	uint8_t* (*encode)(struct encoder_s* encoder, int16_t* pcm, size_t frames, size_t* bytes);
-	void (*open)(struct encoder_s* encoder);
+	bool (*open)(struct encoder_s* encoder);
 	void (*close)(struct encoder_s* encoder);
 	union {
 		struct {
@@ -103,10 +103,11 @@ static FLAC__StreamEncoderWriteStatus flac_write_callback(const FLAC__StreamEnco
 }
 
 /*---------------------------------------------------------------------------*/
-static void flac_open(struct encoder_s * encoder) {
+static bool flac_open(struct encoder_s * encoder) {
 	bool ok = true;
 
 	FLAC__StreamEncoder* codec = FLAC__stream_encoder_new();
+	if (!codec) return false;
 
 	encoder->codec = codec;
 	encoder->flac.size = FLAC_BLOCK_SIZE * 4 + 1024;
@@ -123,11 +124,13 @@ static void flac_open(struct encoder_s * encoder) {
 	ok &= FLAC__stream_encoder_set_streamable_subset(codec, true);
 	ok &= !FLAC__stream_encoder_init_stream(codec, flac_write_callback, NULL, NULL, NULL, encoder);
 
-	if (!ok) fprintf(stderr, "Cannot set FLAC parameters");
+	if (!ok) FLAC__stream_encoder_delete(codec);
+
+	return ok;
 }
 
 /*---------------------------------------------------------------------------*/
-static void mp3_open(struct encoder_s* encoder) {
+static bool mp3_open(struct encoder_s* encoder) {
 	shine_config_t config;
 
 	shine_set_config_mpeg_defaults(&config.mpeg);
@@ -137,16 +140,21 @@ static void mp3_open(struct encoder_s* encoder) {
 	config.mpeg.mode = STEREO;
 
 	encoder->codec = shine_initialise(&config);
+	if (!encoder->codec) return false;
 
 	// we should not have more than 2 blocks to buffer and the result is much less than 
 	encoder->max_frames = max(encoder->max_frames, SHINE_MAX_SAMPLES * 2);
 	encoder->buffer = malloc(encoder->max_frames * 4);
 	encoder->data = malloc(encoder->max_frames * 4);
+
+	return true;
 }
 
 /*---------------------------------------------------------------------------*/
-static void aac_open(struct encoder_s* encoder) {
+static bool aac_open(struct encoder_s* encoder) {
 	encoder->codec = (void*)faacEncOpen(encoder->sample_rate, 2, &encoder->aac.in_samples, &encoder->aac.out_max_bytes);
+	if (!encoder->codec) return false;
+
 	encoder->max_frames = max(encoder->max_frames, encoder->aac.in_samples * 2);
 	encoder->buffer = malloc(encoder->max_frames * 4);
 	encoder->data = malloc(encoder->aac.out_max_bytes);
@@ -158,13 +166,17 @@ static void aac_open(struct encoder_s* encoder) {
 	format->outputFormat = ADTS_STREAM;
 	format->inputFormat = FAAC_INPUT_16BIT;
 	faacEncSetConfiguration(encoder->codec, format);
+
+	return true;
 }
 
 /*---------------------------------------------------------------------------*/
-static void wav_open(struct encoder_s* encoder) {
+static bool wav_open(struct encoder_s* encoder) {
 	encoder->max_frames = max(encoder->max_frames, 2 * ENCODER_MAX_FRAMES + sizeof(wave_header));
 	encoder->wav.header = true;
 	encoder->data = malloc(encoder->max_frames);
+
+	return true;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -264,9 +276,10 @@ static uint8_t* wav_encode(struct encoder_s* encoder, int16_t* pcm, size_t frame
 }
 
 /*---------------------------------------------------------------------------*/
-struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, size_t max_frames, bool* icy) {
+struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t channels, uint8_t sample_size, size_t max_frames, bool* icy) {
 	struct encoder_s* encoder = malloc(sizeof(struct encoder_s));
-	encoder->open = encoder->close = NULL;
+	encoder->open = NULL;
+	encoder->close = NULL;
 	encoder->count = 0;
 	encoder->max_frames = max(ENCODER_MAX_FRAMES, 2 * max_frames);
 	encoder->sample_rate = sample_rate;
@@ -320,17 +333,18 @@ void encoder_delete(struct encoder_s* encoder) {
 }
 
 /*---------------------------------------------------------------------------*/
-void encoder_open(struct encoder_s* encoder) {
+bool encoder_open(struct encoder_s* encoder) {
 	encoder->buffer = NULL;
 	encoder->data = NULL;
 	encoder->codec = NULL;
 	encoder->bytes = encoder->count = 0;
-	if (encoder->open) encoder->open(encoder);
+	if (encoder->open) return encoder->open(encoder);
+	return true;
 }
 
 /*---------------------------------------------------------------------------*/
 void encoder_close(struct encoder_s* encoder) {
-	if (encoder->close) encoder->close(encoder);
+	if (encoder->close && encoder) encoder->close(encoder);
 
 	if (encoder->buffer) free(encoder->buffer);
 	if (encoder->data) free(encoder->data);
@@ -350,4 +364,3 @@ char* encoder_mimetype(struct encoder_s* encoder) {
 size_t encoder_space(struct encoder_s* encoder) {
 	return encoder->max_frames / 2 - encoder->count;
 }
-

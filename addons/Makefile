@@ -11,7 +11,8 @@ endif
 PLATFORM ?= $(firstword $(subst -, ,$(CC)))
 HOST ?= $(word 2, $(subst -, ,$(CC)))
 
-LIB			= build/libaddons.a
+BUILD		= build/$(HOST)/$(PLATFORM)
+LIB			= $(BUILD)/libaddons.a
 
 DEFINES  = -DNDEBUG -D_GNU_SOURCE
 CFLAGS  += -Wall -Wno-multichar -fPIC -ggdb -O2 $(DEFINES) -fdata-sections -ffunction-sections 
@@ -25,20 +26,20 @@ INCLUDE = -I$(CODECS)/alac/codec \
 		  
 SOURCES = alac_wrapper.cpp encoder.c
 
-OBJECTS = $(patsubst %.c,build/%.o,$(filter %.c,$(SOURCES)))
-OBJECTS += $(patsubst %.cpp,build/%.o,$(filter %.cpp,$(SOURCES)))
+OBJECTS = $(patsubst %.c,$(BUILD)/%.o,$(filter %.c,$(SOURCES)))
+OBJECTS += $(patsubst %.cpp,$(BUILD)/%.o,$(filter %.cpp,$(SOURCES)))
 
 all: directory $(OBJECTS) $(LIB)
 directory:
-	@mkdir -p build
+	@mkdir -p $(BUILD)
 	
 $(LIB): $(OBJECTS)
 	$(AR) rcs $@ $^
 
-build/%.o : %.c
+$(BUILD)/%.o : %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDE) $< -c -o $@
 	
-build/%.o : %.cpp
+$(BUILD)/%.o : %.cpp
 	$(CXX) $(CFLAGS) $(CPPFLAGS) $(INCLUDE) $< -c -o $@
 
 clean: 
