@@ -297,8 +297,8 @@ do
 		make PLATFORM=$platform HOST=$host -j8
 		cd $pwd
 		
-		if [ $item/build/$platform/$host/lib$item.a -nt $target/lib$item.a ]; then
-			cp $item/build/$platform/$host/lib$item.a $target
+		if [ $item/build/$host/$platform/lib$item.a -nt $target/lib$item.a ]; then
+			cp $item/build/$host/$platform/lib$item.a $target
 			mkdir -p targets/include/$item
 			cp -u $item/alac_wrapper.h $_
 		fi
