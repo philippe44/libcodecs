@@ -15,7 +15,7 @@ if /I [%1] == [rebuild] (
 	rd /q /s soxr\%build%
 	rd /q /s vorbis\%build%
 	rd /q /s opus\%build%
-	rd /q /s opusfile\%build%
+	rd /q /s opusfile\build
 )
 
 if not exist ogg\%build% (
