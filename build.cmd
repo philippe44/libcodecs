@@ -99,7 +99,7 @@ robocopy soxr\src %include%\soxr soxr.h /NDL /NJH /NJS /nc /ns /np
 robocopy mad %include%\mad mad.h /NDL /NJH /NJS /nc /ns /np
 robocopy alac\codec %include%\alac ALAC*.h /NDL /NJH /NJS /nc /ns /np
 robocopy shine\src\lib %include%\shine layer3.h /NDL /NJH /NJS /nc /ns /np
-robocopy addons %include%\addons alac_wrapper.h /NDL /NJH /NJS /nc /ns /np
+robocopy addons %include%\addons *.h /NDL /NJH /NJS /nc /ns /np
 
 lib.exe /OUT:%target%/libcodecs.lib %target%/*.lib
 
