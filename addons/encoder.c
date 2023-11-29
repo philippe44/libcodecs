@@ -327,6 +327,8 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 
 /*---------------------------------------------------------------------------*/
 void encoder_delete(struct encoder_s* encoder) {
+	if (!encoder) return;
+
 	encoder_close(encoder);
 	free(encoder->mimetype);
 	free(encoder);
@@ -334,33 +336,38 @@ void encoder_delete(struct encoder_s* encoder) {
 
 /*---------------------------------------------------------------------------*/
 bool encoder_open(struct encoder_s* encoder) {
+	if (!encoder) return false;
+
 	encoder->buffer = NULL;
 	encoder->data = NULL;
 	encoder->codec = NULL;
 	encoder->bytes = encoder->count = 0;
 	if (encoder->open) return encoder->open(encoder);
+
 	return true;
 }
 
 /*---------------------------------------------------------------------------*/
 void encoder_close(struct encoder_s* encoder) {
-	if (encoder->close && encoder) encoder->close(encoder);
+	if (!encoder) return;
 
+	if (encoder->codec && encoder->close) encoder->close(encoder);
 	if (encoder->buffer) free(encoder->buffer);
 	if (encoder->data) free(encoder->data);
+
 	encoder->codec = NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 uint8_t* encoder_encode(struct encoder_s* encoder, int16_t* pcm, size_t frames, size_t* bytes) {
-	return encoder->encode(encoder, pcm, frames, bytes);
+	return encoder ? encoder->encode(encoder, pcm, frames, bytes) : NULL;
 }
 
 /*---------------------------------------------------------------------------*/
 char* encoder_mimetype(struct encoder_s* encoder) {
-	return encoder->mimetype;
+	return encoder ? encoder->mimetype : NULL;
 }
 
 size_t encoder_space(struct encoder_s* encoder) {
-	return encoder->max_frames / 2 - encoder->count;
+	return encoder ? encoder->max_frames / 2 - encoder->count : 0;
 }
