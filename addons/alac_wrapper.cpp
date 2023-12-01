@@ -38,7 +38,6 @@ typedef struct alac_codec_s {
 	ALACEncoder *encoder;
 	ALACDecoder *Decoder;
 	unsigned block_size, frames_per_packet;
-	size_t count;
 } alac_codec_t;
 
 /*----------------------------------------------------------------------------*/
@@ -140,8 +139,8 @@ extern "C" bool pcm_to_alac_raw(uint8_t *sample, int frames, uint8_t **out, int 
 // assumes stereo and little endian
 extern "C" bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames, uint8_t **out, int *size) {
 	*size = min(frames, (int) codec->outputFormat.mFramesPerPacket) * codec->inputFormat.mBytesPerFrame;
-	// seems that ALAC has a bug and creates more data than expected
-	*out = (uint8_t*) malloc(*size + kALACMaxEscapeHeaderBytes + 64);
+	// ALAC might have bug and creates more data than expected (or allocaed buffer should be zero'd)
+	*out = (uint8_t*) calloc(*size + kALACMaxEscapeHeaderBytes + 64, 1);
 	return !codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
 }
 
@@ -183,8 +182,6 @@ extern "C" struct alac_codec_s *alac_create_encoder(int max_frames, int sample_r
 	codec->encoder->SetFrameSize(codec->outputFormat.mFramesPerPacket);
 	codec->encoder->SetFastMode(true);
 	codec->encoder->InitializeEncoder(codec->outputFormat);
-
-	codec->count = 3;
 
 	return codec;
 }
