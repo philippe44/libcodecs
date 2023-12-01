@@ -355,6 +355,8 @@ void encoder_close(struct encoder_s* encoder) {
 	if (encoder->buffer) free(encoder->buffer);
 	if (encoder->data) free(encoder->data);
 
+	encoder->buffer = NULL;
+	encoder->data = NULL;
 	encoder->codec = NULL;
 }
 
