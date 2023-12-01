@@ -138,10 +138,15 @@ extern "C" bool pcm_to_alac_raw(uint8_t *sample, int frames, uint8_t **out, int 
 /*----------------------------------------------------------------------------*/
 // assumes stereo and little endian
 extern "C" bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames, uint8_t **out, int *size) {
-	*size = min(frames, (int) codec->outputFormat.mFramesPerPacket) * codec->inputFormat.mBytesPerFrame;
-	// ALAC might have bug and creates more data than expected (or allocaed buffer should be zero'd)
-	*out = (uint8_t*) calloc(*size + kALACMaxEscapeHeaderBytes + 64, 1);
-	return !codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
+	*size = (frames <= (int) codec->outputFormat.mFramesPerPacket) ? codec->outputFormat.mFramesPerPacket : 0;
+
+	if (*size) {
+		// ALAC might have bug and creates more data than expected (or allocaed buffer should be zero'd)
+		*out = (uint8_t*)calloc(*size + kALACMaxEscapeHeaderBytes + 64, 1);
+		return !codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
+	} 
+
+	return false;
 }
 
 #define kTestFormatFlag_16BitSourceData 1
