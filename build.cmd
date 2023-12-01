@@ -71,20 +71,19 @@ if exist %target% (
 	del %target%\*.lib
 )
 
-REM this takes care of alac, mad, shine, opusenc
-robocopy .libs %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
+REM this takes care of alac, mad, shine, opusenc, addons
+robocopy .libs %target% *.lib /NDL /NJH /NJS /nc /ns /np
 
 REM this takes care of faad2, faac, flac, ogg, soxr, vorbis, opus, opusfile
-robocopy flac\%build%\src\libFLAC\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy flac\%build%\src\share\utf8\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy ogg\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy vorbis\%build%\lib\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy opus\%build%\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy opusfile\build\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy faad2\libfaad\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy faac\libfaac\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy soxr\%build%\src\%config% %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
-robocopy addons\build %target% *.lib *.pdb /NDL /NJH /NJS /nc /ns /np
+robocopy flac\%build%\src\libFLAC\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy flac\%build%\src\share\utf8\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy ogg\%build%\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy vorbis\%build%\lib\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy opus\%build%\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy opusfile\build\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy faad2\libfaad\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy faac\libfaac\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
+robocopy soxr\%build%\src\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
 
 rem flac & ogg don't seem to really have per-platform different config files (thanks stdint)
 robocopy flac\include %include%\flac *.h /S /NDL /NJH /NJS /nc /ns /np /XD test*

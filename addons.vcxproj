@@ -71,22 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectName)\build\</OutDir>
-    <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>lib$(ProjectName)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectName)\build\</OutDir>
+    <OutDir>$(SolutionDir).libs\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
     <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectName)\build\</OutDir>
-    <IntDir>$(ProjectName)\build\</IntDir>
-    <TargetName>lib$(ProjectName)</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectName)\build\</OutDir>
+	<OutDir>$(SolutionDir).libs\</OutDir>
     <IntDir>$(ProjectName)\build\</IntDir>
     <TargetName>lib$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -98,6 +88,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\shine\src\lib;..\flac\include;..\faac\include;..\alac\codec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4267;4244;5105</DisableSpecificWarnings>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -115,6 +106,7 @@
       <AdditionalIncludeDirectories>..\shine\src\lib;..\flac\include;..\faac\include;..\alac\codec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <DisableSpecificWarnings>4267;4244;5105</DisableSpecificWarnings>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
