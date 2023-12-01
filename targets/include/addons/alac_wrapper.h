@@ -26,6 +26,8 @@ struct alac_codec_s;
 extern "C" {
 #endif
 
+#define ALAC_MAX_FRAMES	4096
+
 struct alac_codec_s *alac_create_decoder(int magic_cookie_size, uint8_t *magic_cookie,
 								uint8_t *sample_size, unsigned *sample_rate,
 								uint8_t *channels, unsigned int *block_size);
@@ -35,7 +37,7 @@ bool alac_to_pcm(struct alac_codec_s *codec, uint8_t* input,
 
 bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames, uint8_t **out, int *size);
 bool pcm_to_alac_raw(uint8_t *in, int frames, uint8_t **out, int *size, int bsize);
-struct alac_codec_s *alac_create_encoder(int chunk_len, int sampleRate, int sampleSize, int channels);
+struct alac_codec_s *alac_create_encoder(int max_frames, int sample_rate, int sample_size, int channels);
 void alac_delete_encoder(struct alac_codec_s *codec);
 #ifdef __cplusplus
 }

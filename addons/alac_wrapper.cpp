@@ -28,6 +28,8 @@
 
 #include "alac_wrapper.h"
 
+#include <atomic>
+
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 
@@ -36,6 +38,7 @@ typedef struct alac_codec_s {
 	ALACEncoder *encoder;
 	ALACDecoder *Decoder;
 	unsigned block_size, frames_per_packet;
+	size_t count;
 } alac_codec_t;
 
 /*----------------------------------------------------------------------------*/
@@ -66,9 +69,7 @@ extern "C" void alac_delete_decoder(struct alac_codec_s *codec) {
 /*----------------------------------------------------------------------------*/
 
 extern "C" bool alac_to_pcm(struct alac_codec_s *codec, unsigned char* input,
-
 							unsigned char *output, char channels, unsigned *out_frames) {
-
 	BitBuffer input_buffer;
 
 	BitBufferInit(&input_buffer, input, codec->block_size);
@@ -76,11 +77,9 @@ extern "C" bool alac_to_pcm(struct alac_codec_s *codec, unsigned char* input,
 
 }
 
-
 /*----------------------------------------------------------------------------*/
 // assumes stereo and little endian
-extern "C" bool pcm_to_alac_raw(uint8_t *sample, int frames, uint8_t **out, int *size, int bsize)
-{
+extern "C" bool pcm_to_alac_raw(uint8_t *sample, int frames, uint8_t **out, int *size, int bsize) {
 	uint8_t *p;
 	uint32_t *in = (uint32_t*) sample;
 	int count;
@@ -137,24 +136,19 @@ extern "C" bool pcm_to_alac_raw(uint8_t *sample, int frames, uint8_t **out, int 
 	return true;
 }
 
-
 /*----------------------------------------------------------------------------*/
 // assumes stereo and little endian
-extern "C" bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames, uint8_t **out, int *size)
-{
+extern "C" bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames, uint8_t **out, int *size) {
 	*size = min(frames, (int) codec->outputFormat.mFramesPerPacket) * codec->inputFormat.mBytesPerFrame;
 	// seems that ALAC has a bug and creates more data than expected
-	*out = (uint8_t*) malloc(*size * 2 + kALACMaxEscapeHeaderBytes + 64);
-	codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
-
-	return true;
+	*out = (uint8_t*) malloc(*size + kALACMaxEscapeHeaderBytes + 64);
+	return !codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
 }
 
 #define kTestFormatFlag_16BitSourceData 1
 
 /*----------------------------------------------------------------------------*/
-extern "C" struct alac_codec_s *alac_create_encoder(int chunk_len, int sampleRate, int sampleSize, int channels)
-{
+extern "C" struct alac_codec_s *alac_create_encoder(int max_frames, int sample_rate, int sample_size, int channels) {
 	alac_codec_t *codec;
 
 	if ((codec = (alac_codec_t*) malloc(sizeof(alac_codec_t))) == NULL) return NULL;
@@ -166,8 +160,8 @@ extern "C" struct alac_codec_s *alac_create_encoder(int chunk_len, int sampleRat
 
 	// input format is pretty much dictated
 	codec->inputFormat.mFormatID = kALACFormatLinearPCM;
-	codec->inputFormat.mSampleRate = sampleRate;
-	codec->inputFormat.mBitsPerChannel = sampleSize;
+	codec->inputFormat.mSampleRate = sample_rate;
+	codec->inputFormat.mBitsPerChannel = sample_size;
 	codec->inputFormat.mFramesPerPacket = 1;
 	codec->inputFormat.mChannelsPerFrame = channels;
 	codec->inputFormat.mBytesPerFrame = codec->inputFormat.mChannelsPerFrame * codec->inputFormat.mFramesPerPacket * (codec->inputFormat.mBitsPerChannel / 8);
@@ -179,7 +173,7 @@ extern "C" struct alac_codec_s *alac_create_encoder(int chunk_len, int sampleRat
 	codec->outputFormat.mFormatID = kALACFormatAppleLossless;
 	codec->outputFormat.mSampleRate = codec->inputFormat.mSampleRate;
 	codec->outputFormat.mFormatFlags = kTestFormatFlag_16BitSourceData;
-	codec->outputFormat.mFramesPerPacket = chunk_len;
+	codec->outputFormat.mFramesPerPacket = max_frames;
 	codec->outputFormat.mChannelsPerFrame = codec->inputFormat.mChannelsPerFrame;
 	codec->outputFormat.mBytesPerPacket = 0; // we're VBR
 	codec->outputFormat.mBytesPerFrame = 0; // same
@@ -190,13 +184,13 @@ extern "C" struct alac_codec_s *alac_create_encoder(int chunk_len, int sampleRat
 	codec->encoder->SetFastMode(true);
 	codec->encoder->InitializeEncoder(codec->outputFormat);
 
+	codec->count = 3;
+
 	return codec;
 }
 
-
 /*----------------------------------------------------------------------------*/
-extern "C" void alac_delete_encoder(struct alac_codec_s *codec)
-{
+extern "C" void alac_delete_encoder(struct alac_codec_s *codec) {
 	delete codec->encoder;
 	free(codec);
 }
