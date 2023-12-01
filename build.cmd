@@ -21,14 +21,14 @@ if /I [%1] == [rebuild] (
 if not exist ogg\%build% (
 	mkdir ogg\%build%
 	cd ogg\%build%
-	cmake .. -A Win32
+	cmake .. -A Win32 -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )	
 
 if not exist flac\%build% (
 	mkdir flac\%build%
 	cd flac\%build%
-	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF
+	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )	
 
@@ -42,14 +42,14 @@ if not exist soxr\%build% (
 if not exist vorbis\%build% (
 	mkdir vorbis\%build%
 	cd vorbis\%build%
-	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF
+	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )	
 
 if not exist opus\%build% (
 	mkdir opus\%build%
 	cd opus\%build%
-	cmake .. -A Win32 -DOP_DISABLE_EXAMPLES=ON -DOP_DISABLE_DOCS=ON -DOP_DISABLE_HTTP=ON -DCMAKE_INSTALL_PREFIX=.\install
+	cmake .. -A Win32 -DOP_DISABLE_EXAMPLES=ON -DOP_DISABLE_DOCS=ON -DOP_DISABLE_HTTP=ON -DCMAKE_INSTALL_PREFIX=.\install -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )	
 
@@ -61,7 +61,7 @@ if not exist opusfile\build (
 	rd /q /s opusfile\build
 	mkdir opusfile\build
 	cd opusfile\build
-	cmake .. -A Win32 -DOgg_DIR=%pwd%\ogg\%build% -DOpus_DIR=%pwd%\opus\%build%\install\lib\cmake\opus -DOgg_FOUND=1 -DOpus_FOUND=1 -DOP_DISABLE_EXAMPLES=ON -DOP_DISABLE_HTTP=ON -DOP_DISABLE_DOCS=ON -DCMAKE_INSTALL_PREFIX=.\install
+	cmake .. -A Win32 -DOgg_DIR=%pwd%\ogg\%build% -DOpus_DIR=%pwd%\opus\%build%\install\lib\cmake\opus -DOgg_FOUND=1 -DOpus_FOUND=1 -DOP_DISABLE_EXAMPLES=ON -DOP_DISABLE_HTTP=ON -DOP_DISABLE_DOCS=ON -DCMAKE_INSTALL_PREFIX=.\install -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )
 
