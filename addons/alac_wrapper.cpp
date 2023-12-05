@@ -145,6 +145,7 @@ extern "C" bool pcm_to_alac(struct alac_codec_s *codec, uint8_t *in, int frames,
 	//return !codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
 	codec->encoder->Encode(codec->inputFormat, codec->outputFormat, in, *out, size);
 	printf("ALLOCATED %d %d %d ", frames, before, *size);
+	return true;
 }
 
 #define kTestFormatFlag_16BitSourceData 1
