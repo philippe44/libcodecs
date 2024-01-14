@@ -16,7 +16,7 @@
 struct encoder_s;
 
 struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t channels, 
-							     uint8_t sample_size, size_t max_frames, bool* icy);
+							     uint8_t sample_size, size_t max_frames, size_t *icy_interval);
 char*    encoder_mimetype(struct encoder_s* encoder);
 void     encoder_close(struct encoder_s* encoder);
 bool     encoder_open(struct encoder_s* encoder);

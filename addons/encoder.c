@@ -276,7 +276,7 @@ static uint8_t* wav_encode(struct encoder_s* encoder, int16_t* pcm, size_t frame
 }
 
 /*---------------------------------------------------------------------------*/
-struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t channels, uint8_t sample_size, size_t max_frames, bool* icy) {
+struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t channels, uint8_t sample_size, size_t max_frames, size_t *icy_interval) {
 	struct encoder_s* encoder = malloc(sizeof(struct encoder_s));
 	encoder->open = NULL;
 	encoder->close = NULL;
@@ -320,7 +320,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		if (sscanf(codec, "%*[^:]:%d", &encoder->flac.level) && encoder->flac.level > 9) encoder->flac.level = 320;
 	}
 
-	if (encoder->format != CODEC_MP3 && encoder->format != CODEC_AAC) *icy = false;
+	*icy_interval = (encoder->format == CODEC_MP3 || encoder->format == CODEC_AAC) ? 16 * 128 : 128 * 128;
 
 	return encoder;
 }
