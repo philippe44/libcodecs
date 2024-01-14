@@ -320,7 +320,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		if (sscanf(codec, "%*[^:]:%d", &encoder->flac.level) && encoder->flac.level > 9) encoder->flac.level = 320;
 	}
 
-	*icy_interval = (encoder->format == CODEC_MP3 || encoder->format == CODEC_AAC) ? 16 * 128 : 128 * 128;
+	*icy_interval = (encoder->format == CODEC_MP3 || encoder->format == CODEC_AAC) ? 16 * 1024 : 128 * 1024;
 
 	return encoder;
 }
