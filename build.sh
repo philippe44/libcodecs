@@ -252,6 +252,7 @@ do
 		
 		cp $item/src/libFLAC/.libs/libFLAC-static.a $target/libflac.a
 		cp $item/src/share/utf8/.libs/lib*.a $target
+		cp $item/src/flac/flac $target/flac
 		mkdir -p targets/include/$item
 		cp -ur $item/include/FLAC $_
 		cp -ur $item/include/FLAC++ $_

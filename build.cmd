@@ -75,6 +75,7 @@ REM this takes care of alac, mad, shine, opusenc, addons
 robocopy .libs %target% *.lib /NDL /NJH /NJS /nc /ns /np
 
 REM this takes care of faad2, faac, flac, ogg, soxr, vorbis, opus, opusfile
+robocopy flac\%build%\objs\%config% %target% flac.exe /NDL /NJH /NJS /nc /ns /np
 robocopy flac\%build%\src\libFLAC\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
 robocopy flac\%build%\src\share\utf8\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
 robocopy ogg\%build%\%config% %target% *.lib /NDL /NJH /NJS /nc /ns /np
