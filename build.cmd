@@ -25,10 +25,11 @@ if not exist ogg\%build% (
 	cd %pwd%
 )	
 
+REM The flac app won't build unless it finds ogg.lib. There is a nee to manually updade the flacapp.vcxproj
 if not exist flac\%build% (
 	mkdir flac\%build%
 	cd flac\%build%
-	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF -DCMAKE_BUILD_TYPE="%config%"
+	cmake .. -A Win32 -DOGG_LIBRARY=..\..\ogg -DOGG_INCLUDE_DIR=..\..\ogg\include -DINSTALL_MANPAGES=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE="%config%"
 	cd %pwd%
 )	
 
