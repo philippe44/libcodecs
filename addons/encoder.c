@@ -24,8 +24,6 @@
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
-#define FLAC_BLOCK_SIZE	1152
-
 // this can be made an opaque structure
 struct encoder_s {
 	enum { CODEC_MP3 = 0, CODEC_AAC, CODEC_FLAC, CODEC_PCM, CODEC_WAV } format;
@@ -49,6 +47,7 @@ struct encoder_s {
 		struct {
 			int level;
 			size_t size;
+			int blocksize;
 		} flac;
 		struct {
 			unsigned long in_samples, out_max_bytes;
@@ -110,7 +109,7 @@ static bool flac_open(struct encoder_s * encoder) {
 	if (!codec) return false;
 
 	encoder->codec = codec;
-	encoder->flac.size = FLAC_BLOCK_SIZE * 4 + 1024;
+	encoder->flac.size = encoder->flac.blocksize * 4 + 1024;
 	encoder->data = malloc(encoder->flac.size);
 	encoder->max_frames = max(encoder->max_frames, 2 * ENCODER_MAX_FRAMES * sizeof(FLAC__int32) * 2);
 	encoder->buffer = malloc(encoder->max_frames * 4);
@@ -120,7 +119,7 @@ static bool flac_open(struct encoder_s * encoder) {
 	ok &= FLAC__stream_encoder_set_channels(codec, 2);
 	ok &= FLAC__stream_encoder_set_bits_per_sample(codec, 16);
 	ok &= FLAC__stream_encoder_set_sample_rate(codec, encoder->sample_rate);
-	ok &= FLAC__stream_encoder_set_blocksize(codec, FLAC_BLOCK_SIZE);
+	ok &= FLAC__stream_encoder_set_blocksize(codec, encoder->flac.blocksize);
 	ok &= FLAC__stream_encoder_set_streamable_subset(codec, true);
 	ok &= !FLAC__stream_encoder_init_stream(codec, flac_write_callback, NULL, NULL, NULL, encoder);
 
@@ -316,8 +315,10 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = flac_open;
 		encoder->close = flac_close;
 		encoder->encode = flac_encode;
-		encoder->flac.level = 0;
+		encoder->flac.level = 5;
+		encoder->flac.blocksize = 4096;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->flac.level) && encoder->flac.level > 9) encoder->flac.level = 9;
+		if (sscanf(codec, "%*[^/]/%d", &encoder->flac.blocksize) && (encoder->flac.blocksize < 1152 || encoder->flac.blocksize > 16384)) encoder->flac.blocksize = 4096;
 	}
 
 	*icy_interval = (encoder->format == CODEC_MP3 || encoder->format == CODEC_AAC) ? 16 * 1024 : 128 * 1024;
