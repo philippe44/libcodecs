@@ -24,7 +24,7 @@
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
-#define FLAC_BLOCK_SIZE	4096
+#define FLAC_BLOCK_SIZE	1152
 
 // this can be made an opaque structure
 struct encoder_s {
@@ -267,7 +267,7 @@ static uint8_t* wav_encode(struct encoder_s* encoder, int16_t* pcm, size_t frame
 		memcpy(encoder->data, &wave_header, sizeof(wave_header));
 		memcpy(encoder->data + sizeof(wave_header), pcm, frames * 4);
 
-		bytes += sizeof(wave_header);
+		*bytes += sizeof(wave_header);
 		encoder->wav.header = false;
 		return encoder->data;
 	}
@@ -300,7 +300,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = mp3_open;
 		encoder->close = mp3_close;
 		encoder->encode = mp3_encode;
-		encoder->mp3.bitrate = 192;
+		encoder->mp3.bitrate = 320;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->mp3.bitrate) && encoder->mp3.bitrate > 320) encoder->mp3.bitrate = 320;
 	} else if (!strncasecmp(codec, "aac",3)) {
 		encoder->format = CODEC_AAC;
@@ -308,7 +308,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = aac_open;
 		encoder->close = aac_close;
 		encoder->encode = aac_encode;
-		encoder->aac.bitrate = 128;
+		encoder->aac.bitrate = 256;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->aac.bitrate) && encoder->aac.bitrate > 320) encoder->aac.bitrate = 320;
 	} else {
 		encoder->format = CODEC_FLAC;
@@ -316,8 +316,8 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = flac_open;
 		encoder->close = flac_close;
 		encoder->encode = flac_encode;
-		encoder->flac.level = 5;
-		if (sscanf(codec, "%*[^:]:%d", &encoder->flac.level) && encoder->flac.level > 9) encoder->flac.level = 320;
+		encoder->flac.level = 0;
+		if (sscanf(codec, "%*[^:]:%d", &encoder->flac.level) && encoder->flac.level > 9) encoder->flac.level = 9;
 	}
 
 	*icy_interval = (encoder->format == CODEC_MP3 || encoder->format == CODEC_AAC) ? 16 * 1024 : 128 * 1024;
