@@ -300,7 +300,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = mp3_open;
 		encoder->close = mp3_close;
 		encoder->encode = mp3_encode;
-		encoder->mp3.bitrate = 320;
+		encoder->mp3.bitrate = 192;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->mp3.bitrate) && encoder->mp3.bitrate > 320) encoder->mp3.bitrate = 320;
 	} else if (!strncasecmp(codec, "aac",3)) {
 		encoder->format = CODEC_AAC;
@@ -308,7 +308,7 @@ struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t chan
 		encoder->open = aac_open;
 		encoder->close = aac_close;
 		encoder->encode = aac_encode;
-		encoder->aac.bitrate = 256;
+		encoder->aac.bitrate = 128;
 		if (sscanf(codec, "%*[^:]:%d", &encoder->aac.bitrate) && encoder->aac.bitrate > 320) encoder->aac.bitrate = 320;
 	} else {
 		encoder->format = CODEC_FLAC;
