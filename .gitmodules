@@ -33,4 +33,4 @@
 	url = https://github.com/philippe44/faac
 [submodule "flac"]
 	path = flac
-	url = https://github.com/philippe44/flac
+	url = https://github.com/xiph/flac
