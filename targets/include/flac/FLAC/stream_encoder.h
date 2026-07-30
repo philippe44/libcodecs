@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2023  Xiph.Org Foundation
+ * Copyright (C) 2011-2025  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -538,11 +538,17 @@ typedef FLAC__StreamEncoderReadStatus (*FLAC__StreamEncoderReadCallback)(const F
  *  callback is being called to write metadata.
  *
  * \note
- * Unlike when writing to native FLAC, when writing to Ogg FLAC the
- * write callback will be called twice when writing each audio
- * frame; once for the page header, and once for the page body.
- * When writing the page header, the \a samples argument to the
- * write callback will be \c 0.
+ * Unlike when writing to native FLAC, when writing to Ogg FLAC the write
+ * callback will be called at least twice when writing each audio frame; once
+ * for the page header and once for the page body, possibly repeating this
+ * pair of calls several times in a batch with the same value of
+ * \a current_frame.  When writing the page header, as well as in all but the
+ * first page body write of the batch, the \a samples argument to the write
+ * callback will be \c 0. For the write callback call containing the first
+ * page body, the \a samples argument is the number of samples contained in
+ * all newly added complete packets (not pages). This means that in case a
+ * packet is split over two pages, they are counted in the samples argument
+ * of the page on which the packet is completed.
  *
  * \note In general, FLAC__StreamEncoder functions which change the
  * state should not be called on the \a encoder while in the callback.
