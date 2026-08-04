@@ -276,7 +276,7 @@ static uint8_t* wav_encode(struct encoder_s* encoder, int16_t* pcm, size_t frame
 
 /*---------------------------------------------------------------------------*/
 struct encoder_s* encoder_create(char* codec, uint32_t sample_rate, uint8_t channels, uint8_t sample_size, size_t max_frames, size_t *icy_interval) {
-	struct encoder_s* encoder = malloc(sizeof(struct encoder_s));
+	struct encoder_s* encoder = calloc(1, sizeof(struct encoder_s));
 	encoder->open = NULL;
 	encoder->close = NULL;
 	encoder->count = 0;
